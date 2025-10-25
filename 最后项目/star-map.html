@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星穹万象 - 实时星图定位与星座探秘</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --space-dark: #0a0e17;
+            --nebulae-purple: #1a0a2c;
+            --star-blue: #0f4c75;
+            --pulsar-white: #bbe1fa;
+            --planet-orange: #ff7b25;
+            --mars-red: #c1440e;
+            --saturn-gold: #e1ad21;
+            --galaxy-pink: #d16ba5;
+            --accent-blue: #64ffda;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--pulsar-white);
+            font-family: 'Exo 2', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(5, 7, 17, 0.8), transparent);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--pulsar-white), var(--accent-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(187, 225, 250, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--pulsar-white);
+            text-decoration: none;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--pulsar-white);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .star-map-section {
+            padding-top: 120px;
+        }
+
+        .star-map {
+            background: rgba(10, 14, 23, 0.7);
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 60px auto;
+            max-width: 1200px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(187, 225, 250, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .generate-planet {
+            padding: 30px;
+        }
+
+        .generate-planet h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .generate-planet iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .constellations {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        .constellation {
+            background: rgba(10, 14, 23, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(187, 225, 250, 0.1);
+        }
+
+        .constellation:hover {
+            transform: translateY(-10px);
+            border-color: rgba(187, 225, 250, 0.3);
+            box-shadow: 0 10px 30px rgba(15, 76, 117, 0.3);
+        }
+
+        .constellation h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--pulsar-white);
+            display: flex;
+            align-items: center;
+        }
+
+        .constellation h3 .symbol {
+            margin-right: 12px;
+            color: var(--galaxy-pink);
+            font-size: 1.8rem;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .constellation p {
+            color: rgba(187, 225, 250, 0.8);
+            margin-bottom: 15px;
+        }
+
+        .constellation button {
+            padding: 10px 20px;
+            background-color: var(--star-blue);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .constellation button:hover {
+            background-color: #0d3c5c;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            background: linear-gradient(45deg, var(--star-blue), var(--pulsar-white), var(--galaxy-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(187, 225, 250, 0.6);
+            padding-top: 50px;
+        }
+
+        .search-controls {
+            margin: 30px auto;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column; /* Arrange items vertically */
+            align-items: center; /* Center horizontally */
+            gap: 15px; /* Space between search bar and button */
+        }
+
+        .search-bar {
+            width: 100%; /* Take full width of its parent */
+            display: flex;
+            border-radius: 30px;
+            overflow: hidden;
+            background: rgba(187, 225, 250, 0.1);
+            border: 1px solid rgba(187, 225, 250, 0.2);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-bar input {
+            flex-grow: 1;
+            padding: 15px 25px;
+            border: none;
+            background: transparent;
+            color: var(--pulsar-white);
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(187, 225, 250, 0.6);
+        }
+
+        .search-bar button {
+            background: var(--star-blue);
+            border: none;
+            padding: 15px 25px;
+            color: var(--pulsar-white);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background: #0d3c5c;
+        }
+
+        /* Updated styles for the back-to-search-button */
+        #back-to-search-button {
+            background: var(--star-blue); /* Changed to star-blue */
+            color: var(--pulsar-white);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: none; /* Hidden by default */
+        }
+
+        #back-to-search-button:hover {
+            background-color: #0d3c5c; /* Changed to match search button hover */
+            transform: translateY(-2px);
+        }
+
+        #wikipedia-results {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(10, 14, 23, 0.7);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(187, 225, 250, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        #wikipedia-results h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--pulsar-white);
+            text-align: center;
+        }
+
+        .wiki-result-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(187, 225, 250, 0.1);
+        }
+
+        .wiki-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .wiki-result-item h4 {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.3rem;
+            color: var(--star-blue);
+            margin-bottom: 5px;
+        }
+
+        .wiki-result-item p {
+            color: rgba(187, 225, 250, 0.8);
+            font-size: 0.95rem;
+        }
+
+        .wiki-result-item a {
+            color: var(--galaxy-pink);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .wiki-result-item a:hover {
+            color: #fff;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--nebulae-purple), var(--space-dark));
+            margin: auto;
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid var(--accent-blue);
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-blue);
+            position: relative;
+            text-align: center;
+            animation: fadeInScale 0.3s ease-out;
+        }
+
+        .canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #constellation-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--pulsar-white);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(187, 225, 250, 0.5);
+            position: relative;
+            z-index: 2;
+        }
+
+        .modal-content .close-button {
+            background-color: var(--star-blue);
+            color: var(--pulsar-white);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            margin-top: 20px;
+        }
+
+        .modal-content .close-button:hover {
+            background-color: #0d3c5c;
+            transform: translateY(-2px);
+        }
+
+        /* New styles for the interactive form */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(187, 225, 250, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(10, 14, 23, 0.8);
+            border: 1px solid var(--star-blue);
+            border-radius: 8px;
+            color: var(--pulsar-white);
+            font-size: 1rem;
+            font-family: 'Exo 2', sans-serif;
+            outline: none; /* Remove default outline */
+        }
+
+        .form-group input::placeholder {
+            color: rgba(187, 225, 250, 0.5);
+        }
+
+        /* Specific style for date input to ensure consistent appearance */
+        /* This section is now technically unused for the date input but kept for consistency if it were to be re-introduced */
+        .form-group input[type="date"] {
+            line-height: normal;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .form-group input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+        .form-group input[type="date"]::-moz-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+
+        #start-divination-button {
+            background: linear-gradient(45deg, var(--galaxy-pink), var(--star-blue));
+            color: var(--pulsar-white);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        #start-divination-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(209, 107, 165, 0.5);
+        }
+
+        #divination-result-container {
+            position: relative;
+            z-index: 2;
+            min-height: 100px;
+            color: rgba(187, 225, 250, 0.9);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        #modalDivinationResult .loading-text {
+            color: var(--accent-blue);
+            font-style: italic;
+        }
+
+        #modalDivinationResult .error-text {
+            color: #ff4444;
+        }
+
+        /* Custom Picker Base Styles */
+        .custom-picker-container {
+            display: none; /* Hidden by default */
+            position: absolute; /* Position relative to its closest positioned ancestor (divinationModal) */
+            background-color: var(--space-dark);
+            border: 1px solid var(--star-blue);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            z-index: 9999; /* Ensure it's on top of everything */
+            width: 100%;
+            max-width: 300px; /* Adjust as needed */
+            color: var(--pulsar-white);
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .custom-picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .custom-picker-header button {
+            background: none;
+            border: none;
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+
+        .custom-picker-header button:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+
+        .custom-picker-header span {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .custom-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Flexible grid for options */
+            gap: 5px;
+            text-align: center;
+        }
+
+        .custom-picker-grid div {
+            padding: 8px 0;
+            border-radius: 5px;
+        }
+
+        .custom-picker-grid .option-cell {
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .custom-picker-grid .option-cell:hover {
+            background-color: var(--star-blue);
+        }
+
+        .custom-picker-grid .option-cell.selected {
+            background-color: var(--galaxy-pink);
+            color: var(--pulsar-white);
+            font-weight: bold;
+            box-shadow: 0 0 8px rgba(209, 107, 165, 0.5);
+        }
+
+        /* Specific styles for Date Picker (inherits from custom-picker-container) */
+        /* This section is now technically unused for the date picker but kept for consistency if it were to be re-introduced */
+        .date-picker-grid {
+            grid-template-columns: repeat(7, 1fr); /* Specific for 7 days a week */
+        }
+        .date-picker-grid .day-name {
+            color: rgba(187, 225, 250, 0.6);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .date-picker-grid .date-cell.other-month {
+            color: rgba(187, 225, 250, 0.4);
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .star-map-section {
+                padding-top: 150px;
+            }
+
+            .custom-picker-container {
+                max-width: 90%; /* Adjust for smaller screens */
+            }
+            .search-controls {
+                gap: 10px; /* Adjust gap for smaller screens */
+            }
+            #back-to-search-button {
+                width: 100%; /* Make button full width on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-links">
+        <a href="index1.html">首页</a>
+        <a href="index.html">行星系统</a>
+        <a href="planets-2.html">3D模型</a>
+        <a href="http://127.0.0.1:3000/star-map.html">星穹万象</a>
+        <a href="games.html">月相日历</a>
+    </div>
+</nav>
+
+<section id="star-map-main" class="container star-map-section">
+    <h2 class="section-title">实时星图定位</h2>
+    <div class="star-map">
+        <div class="generate-planet">
+            <h3>VR星图</h3>
+            <iframe src="http://matrix.lamost.org/stellarium/" title="Stellarium Web Star Map"></iframe>
+        </div>
+    </div>
+</section>
+
+<section id="constellations" class="container">
+    <h2 class="section-title">星座探秘</h2>
+    <div class="search-controls">
+        <div class="search-bar">
+            <input type="text" id="constellation-search" placeholder="搜索星座、维基百科或创建新星座...">
+            <button id="search-button"><i class="fas fa-search"></i> 搜索</button>
+        </div>
+        <button id="back-to-search-button">返回搜索</button>
+    </div>
+    <div class="constellations">
+    </div>
+    <div id="wikipedia-results" class="container" style="display: none;">
+        <h3>维基百科搜索结果</h3>
+        <div id="wiki-results-list">
+        </div>
+    </div>
+</section>
+
+<div id="divinationModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="canvas-container">
+            <canvas id="constellation-canvas"></canvas>
+        </div>
+        <h3 id="modalConstellationName"></h3>
+
+        <div id="divination-form">
+            <div class="form-group">
+                <label for="user-name">您的姓名:</label>
+                <input type="text" id="user-name" placeholder="输入您的姓名...">
+            </div>
+            <div class="form-group">
+                <label for="user-gender">您的性别:</label>
+                <!-- Changed to text input for custom picker -->
+                <input type="text" id="user-gender" placeholder="请选择性别..." readonly>
+            </div>
+            <div class="form-group">
+                <label for="user-birthdate">您的出生日期:</label>
+                <!-- Changed type to "text" and added placeholder -->
+                <input type="text" id="user-birthdate" placeholder="例如: 2000-01-01">
+            </div>
+            <div class="form-group">
+                <label for="divination-topic">你想占卜什么？ (例如：事业, 爱情, 财运)</label>
+                <input type="text" id="divination-topic" placeholder="输入你关心的问题...">
+            </div>
+            <div class="form-group">
+                <label for="divination-style">选择占卜风格:</label>
+                <!-- Changed to text input for custom picker -->
+                <input type="text" id="divination-style" placeholder="请选择占卜风格..." readonly>
+            </div>
+            <button id="start-divination-button">开始占卜</button>
+        </div>
+
+        <div id="divination-result-container" style="display: none;">
+            <p id="modalDivinationResult"></p>
+        </div>
+
+        <button class="close-button" onclick="closeDivinationModal()">关闭</button>
+    </div>
+
+    <!-- Date picker container removed from here -->
+
+    <!-- Gender picker container -->
+    <div id="gender-picker-container" class="custom-picker-container">
+        <div class="custom-picker-header">
+            <span>选择性别</span>
+        </div>
+        <div id="gender-picker-grid" class="custom-picker-grid">
+            <!-- Gender options will be rendered here -->
+        </div>
+    </div>
+
+    <!-- Divination Style picker container -->
+    <div id="style-picker-container" class="custom-picker-container">
+        <div class="custom-picker-header">
+            <span>选择占卜风格</span>
+        </div>
+        <div id="style-picker-grid" class="custom-picker-grid">
+            <!-- Style options will be rendered here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // 星座数据
+    const constellationsData = [
+        { name: "白羊座", description: "黄道十二星座之首，形似一只公羊，是春分点所在的星座。", symbol: "♈", stars: [{x: 50, y: 100}, {x: 80, y: 80}, {x: 120, y: 90}, {x: 100, y: 130}] },
+        { name: "金牛座", description: "黄道十二星座之一，形似一头公牛的头部，拥有明亮的毕宿五。", symbol: "♉", stars: [{x: 70, y: 70}, {x: 100, y: 50}, {x: 150, y: 80}, {x: 130, y: 120}, {x: 80, y: 110}, {x: 70, y: 70}] },
+        { name: "双子座", description: "黄道十二星座之一，由两颗明亮的星组成，形似一对双胞胎。", symbol: "♊", stars: [{x: 70, y: 60}, {x: 90, y: 150}, {x: 130, y: 60}, {x: 150, y: 150}] },
+        { name: "巨蟹座", description: "黄道十二星座之一，形状像一只螃蟹，是夏季最暗的星座之一。", symbol: "♋", stars: [{x: 80, y: 80}, {x: 100, y: 60}, {x: 130, y: 80}, {x: 100, y: 120}, {x: 80, y: 80}] },
+        { name: "狮子座", description: "春季星座，形似一只蹲伏的狮子，轩辕十四是其明亮的心脏。", symbol: "♌", stars: [{x: 50, y: 130}, {x: 80, y: 100}, {x: 110, y: 70}, {x: 140, y: 90}, {x: 160, y: 120}, {x: 130, y: 140}, {x: 80, y: 100}] },
+        { name: "处女座", description: "黄道十二星座之一，是第二大星座，以其明亮的恒星角宿一而闻名。", symbol: "♍", stars: [{x: 60, y: 150}, {x: 80, y: 100}, {x: 120, y: 80}, {x: 150, y: 110}, {x: 130, y: 160}] },
+        { name: "天秤座", description: "黄道十二星座中唯一一个没有生命形象的星座，代表平衡与公正。", symbol: "♎", stars: [{x: 70, y: 80}, {x: 100, y: 60}, {x: 150, y: 60}, {x: 180, y: 80}, {x: 125, y: 120}] },
+        { name: "天蝎座", description: "黄道十二星座之一，夏季星空中显著的星座，拥有红色的心宿二。", symbol: "♏", stars: [{x: 80, y: 70}, {x: 110, y: 50}, {x: 140, y: 70}, {x: 120, y: 100}, {x: 130, y: 140}, {x: 100, y: 160}] },
+        { name: "射手座", description: "黄道十二星座之一，形似一个半人马弓箭手，指向银河系中心。", symbol: "♐", stars: [{x: 80, y: 140}, {x: 100, y: 100}, {x: 140, y: 80}, {x: 160, y: 100}, {x: 120, y: 120}, {x: 100, y: 100}] },
+        { name: "摩羯座", description: "黄道十二星座之一，形似山羊的身体和鱼的尾巴，是冬季的星座。", symbol: "♑", stars: [{x: 80, y: 120}, {x: 100, y: 80}, {x: 140, y: 70}, {x: 160, y: 100}, {x: 130, y: 140}, {x: 80, y: 120}] },
+        { name: "水瓶座", description: "黄道十二星座之一，代表一个倒水的人，象征着智慧和知识的传播。", symbol: "♒", stars: [{x: 70, y: 70}, {x: 90, y: 100}, {x: 120, y: 80}, {x: 140, y: 120}, {x: 160, y: 100}] },
+        { name: "双鱼座", description: "黄道十二星座之一，由两条被丝带连接的鱼组成，是春季的星座。", symbol: "♓", stars: [{x: 60, y: 80}, {x: 90, y: 60}, {x: 120, y: 90}, {x: 100, y: 130}, {x: 150, y: 150}, {x: 130, y: 120}] }
+    ];
+
+    const constellationsContainer = document.querySelector('.constellations');
+    const wikipediaResultsDiv = document.getElementById('wikipedia-results');
+    const wikiResultsList = document.getElementById('wiki-results-list');
+    const divinationModal = document.getElementById('divinationModal');
+    const modalConstellationName = document.getElementById('modalConstellationName');
+    const modalDivinationResult = document.getElementById('modalDivinationResult');
+    const constellationCanvas = document.getElementById('constellation-canvas');
+    const startDivinationButton = document.getElementById('start-divination-button');
+    const divinationForm = document.getElementById('divination-form');
+    const divinationResultContainer = document.getElementById('divination-result-container');
+    const constellationSearchInput = document.getElementById('constellation-search');
+    const backToSearchButton = document.getElementById('back-to-search-button'); // 获取新的返回搜索按钮
+    const ctx = constellationCanvas.getContext('2d');
+
+    let animationFrameId;
+    const particles = [];
+    const numParticles = 100;
+
+    // 初始化粒子
+    function initParticles() {
+        particles.length = 0;
+        for (let i = 0; i < numParticles; i++) {
+            particles.push({
+                x: Math.random() * constellationCanvas.width,
+                y: Math.random() * constellationCanvas.height,
+                radius: Math.random() * 1.5 + 0.5,
+                alpha: Math.random() * 0.5 + 0.2,
+                speedX: (Math.random() - 0.5) * 0.5,
+                speedY: (Math.random() - 0.5) * 0.5,
+            });
+        }
+    }
+
+    // 绘制粒子
+    function drawParticles() {
+        ctx.save();
+        ctx.fillStyle = 'white';
+        particles.forEach(p => {
+            ctx.globalAlpha = p.alpha;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+            p.x += p.speedX;
+            p.y += p.speedY;
+            if (p.x < 0 || p.x > constellationCanvas.width || p.y < 0 || p.y > constellationCanvas.height) {
+                p.x = Math.random() * constellationCanvas.width;
+                p.y = Math.random() * constellationCanvas.height;
+                p.alpha = Math.random() * 0.5 + 0.2;
+            }
+        });
+        ctx.restore();
+    }
+
+    // 创建星座HTML元素
+    const createConstellationHTML = (constellation) => {
+        return `
+            <div class="constellation" data-name="${constellation.name}">
+                <h3><span class="symbol">${constellation.symbol}</span> ${constellation.name}</h3>
+                <p>${constellation.description}</p>
+                <button onclick="getDivination('${constellation.name}')">星座占卜</button>
+            </div>
+        `;
+    };
+
+    // 渲染星座列表
+    const renderConstellations = (data = constellationsData) => {
+        constellationsContainer.innerHTML = data.map(createConstellationHTML).join('') || '<p style="text-align: center;">未找到匹配的星座。</p>';
+        // 如果数据不是完整的原始数据集，或者搜索框有内容，则显示返回搜索按钮
+        if (data.length < constellationsData.length || constellationSearchInput.value.trim() !== '') {
+            backToSearchButton.style.display = 'block';
+        } else {
+            backToSearchButton.style.display = 'none';
+        }
+    };
+
+    // 搜索维基百科
+    async function searchWikipedia(query) {
+        const endpoint = `https://zh.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&uselang=zh-hans`;
+        try {
+            const response = await fetch(endpoint);
+            const data = await response.json();
+            wikiResultsList.innerHTML = '';
+            wikipediaResultsDiv.style.display = 'none';
+            if (data.query && data.query.search && data.query.search.length > 0) {
+                wikipediaResultsDiv.style.display = 'block';
+                data.query.search.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.classList.add('wiki-result-item');
+                    const pageUrl = `https://zh.wikipedia.org/wiki/${encodeURIComponent(result.title.replace(/ /g, '_'))}`;
+                    resultItem.innerHTML = `
+                        <h4><a href="${pageUrl}" target="_blank">${result.title}</a></h4>
+                        <p>${result.snippet.replace(/<[^>]*>?/gm, '')}...</p>
+                    `;
+                    wikiResultsList.appendChild(resultItem);
+                });
+            } else {
+                wikiResultsList.innerHTML = `<p>未找到关于 "${query}" 的维基百科结果。</p>`;
+                wikipediaResultsDiv.style.display = 'block';
+            }
+            backToSearchButton.style.display = 'block'; // 维基百科搜索后总是显示按钮
+        } catch (error) {
+            console.error('调用维基百科API时出错:', error);
+            wikiResultsList.innerHTML = '<p class="error-text">加载维基百科结果时出错。</p>';
+            wikipediaResultsDiv.style.display = 'block';
+            backToSearchButton.style.display = 'block'; // 即使出错也显示按钮
+        }
+    }
+
+    // 处理搜索逻辑
+    const handleSearch = async () => {
+        const searchTerm = constellationSearchInput.value.trim();
+        if (!searchTerm) {
+            renderConstellations(constellationsData);
+            wikipediaResultsDiv.style.display = 'none';
+            backToSearchButton.style.display = 'none'; // 搜索框为空时隐藏按钮
+            return;
+        }
+        await searchWikipedia(searchTerm);
+        const lowerCaseFilter = searchTerm.toLowerCase();
+        const filteredData = constellationsData.filter(c => c.name.toLowerCase().includes(lowerCaseFilter));
+        if (filteredData.length > 0) {
+            renderConstellations(filteredData);
+        } else {
+            const newConstellation = {
+                name: searchTerm,
+                description: `一个新发现的星座，充满了未知的奥秘。`,
+                symbol: '✧'
+            };
+            constellationsContainer.innerHTML = createConstellationHTML(newConstellation);
+            backToSearchButton.style.display = 'block'; // 创建新星座时显示按钮
+        }
+    };
+
+    document.getElementById('search-button').addEventListener('click', handleSearch);
+    constellationSearchInput.addEventListener('keyup', (e) => e.key === 'Enter' && handleSearch());
+
+    // 返回搜索功能
+    const backToSearch = () => {
+        constellationSearchInput.value = ''; // 清空搜索输入
+        wikipediaResultsDiv.style.display = 'none'; // 隐藏维基百科结果
+        backToSearchButton.style.display = 'none'; // 隐藏返回按钮
+        renderConstellations(); // 渲染所有原始星座
+    };
+
+    backToSearchButton.addEventListener('click', backToSearch);
+
+    // 绘制星座动画
+    function drawConstellationAnimation(stars) {
+        const canvas = constellationCanvas;
+        const modalContent = divinationModal.querySelector('.modal-content');
+        canvas.width = modalContent.clientWidth;
+        canvas.height = modalContent.clientHeight;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+        const starColor = 'rgba(255, 255, 255, 0.9)';
+        const lineColor = 'rgba(100, 255, 218, 0.6)';
+        const glowColor = 'rgba(100, 255, 218, 0.8)';
+        const starBaseRadius = 3;
+        const totalAnimationFrames = 180;
+        let currentFrame = 0;
+        const scaleX = canvas.width / 250;
+        const scaleY = canvas.height / 200;
+        const scaledStars = stars.map(star => ({ x: star.x * scaleX, y: star.y * scaleY }));
+
+        initParticles();
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawParticles();
+
+            scaledStars.forEach((star, index) => {
+                const pulse = Math.sin(currentFrame * 0.08 + index * 0.5) * 0.5 + 0.5;
+                const radius = starBaseRadius + pulse * 2;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = starColor;
+                ctx.shadowColor = glowColor;
+                ctx.shadowBlur = radius * 3;
+                ctx.fill();
+            });
+
+            const lineProgress = Math.min(1, Math.max(0, (currentFrame - 30) / 90));
+            if (lineProgress > 0) {
+                for (let i = 0; i < scaledStars.length - 1; i++) {
+                    const startStar = scaledStars[i];
+                    const endStar = scaledStars[i + 1];
+                    const currentX = startStar.x + (endStar.x - startStar.x) * lineProgress;
+                    const currentY = startStar.y + (endStar.y - startStar.y) * lineProgress;
+                    ctx.beginPath();
+                    ctx.moveTo(startStar.x, startStar.y);
+                    ctx.lineTo(currentX, currentY);
+                    ctx.strokeStyle = lineColor;
+                    ctx.lineWidth = 2;
+                    ctx.shadowColor = glowColor;
+                    ctx.shadowBlur = 10;
+                    ctx.stroke();
+                }
+            }
+
+            currentFrame++;
+            ctx.shadowBlur = 0;
+            if (currentFrame < totalAnimationFrames) {
+                animationFrameId = requestAnimationFrame(animate);
+            }
+        }
+        animate();
+    }
+
+    // 调用Gemini API的实际函数
+    async function callGeminiAPI(prompt) {
+        try {
+            // 向后端服务器的 /checkGemini 接口发送请求
+            const response = await fetch(`/checkGemini?text=${encodeURIComponent(prompt)}`);
+
+            // 检查HTTP响应是否成功
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP错误! 状态: ${response.status}, 信息: ${errorText}`);
+            }
+            // 假设响应是纯文本
+            const result = await response.text();
+            return result;
+        } catch (error) {
+            console.error("调用Gemini API时出错:", error);
+            // 向用户显示更友好的错误信息
+            throw new Error(`占卜服务不可用: ${error.message}`);
+        }
+    }
+
+    // 获取占卜结果并显示模态框
+    function getDivination(constellationName) {
+        const constellation = constellationsData.find(c => c.name === constellationName);
+        modalConstellationName.innerText = `${constellationName}的占卜指引`;
+        divinationModal.dataset.constellationName = constellationName;
+
+        // 重置并显示表单
+        divinationForm.style.display = 'block';
+        divinationResultContainer.style.display = 'none';
+        document.getElementById('user-name').value = '';
+        document.getElementById('user-gender').value = ''; // 重置性别输入
+        document.getElementById('user-birthdate').value = ''; // 重置出生日期输入
+        document.getElementById('divination-topic').value = '';
+        document.getElementById('divination-style').value = ''; // 重置风格输入
+        modalDivinationResult.innerHTML = '';
+
+        divinationModal.style.display = 'flex';
+
+        // 打开模态框时隐藏所有选择器
+        hideAllPickers();
+
+        if (constellation && constellation.stars) {
+            // 延迟动画以确保模态框可见
+            setTimeout(() => drawConstellationAnimation(constellation.stars), 100);
+        }
+    }
+
+    // 开始占卜按钮的事件监听器
+    startDivinationButton.addEventListener('click', async () => {
+        const constellationName = divinationModal.dataset.constellationName;
+        const userName = document.getElementById('user-name').value.trim();
+        const userGender = document.getElementById('user-gender').value; // 从文本输入获取值
+        const userBirthdate = document.getElementById('user-birthdate').value; // 从文本输入获取值
+        const topic = document.getElementById('divination-topic').value.trim() || "综合运势";
+        const style = document.getElementById('divination-style').value; // 从文本输入获取值
+
+        divinationForm.style.display = 'none';
+        divinationResultContainer.style.display = 'block';
+        modalDivinationResult.innerHTML = '<span class="loading-text">星辰正在为您指引...</span>';
+
+        let prompt = `请以一种"${style}"的风格，为"${constellationName}"的用户，就他们关心的问题"${topic}"，提供一个简短、有趣、充满想象力的星座占卜。`;
+
+        if (userName) {
+            prompt += ` 用户的姓名是：${userName}。`;
+        }
+        if (userGender) {
+            prompt += ` 用户的性别是：${userGender}。`;
+        }
+        if (userBirthdate) {
+            prompt += ` 用户的出生日期是：${userBirthdate}。`;
+        }
+        prompt += ` 请根据这些信息提供更个性化的占卜。`;
+
+
+        try {
+            const result = await callGeminiAPI(prompt);
+            modalDivinationResult.innerText = result;
+        } catch (error) {
+            modalDivinationResult.innerHTML = `<span class="error-text">❌ 占卜失败: ${error.message}</span>`;
+        }
+    });
+
+    // 关闭占卜模态框
+    function closeDivinationModal() {
+        divinationModal.style.display = 'none';
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        // 重置表单以便下次使用
+        document.getElementById('user-name').value = '';
+        document.getElementById('user-gender').value = '';
+        document.getElementById('user-birthdate').value = '';
+        document.getElementById('divination-topic').value = '';
+        document.getElementById('divination-style').value = '';
+        modalDivinationResult.innerHTML = '';
+        // 关闭模态框时隐藏所有选择器
+        hideAllPickers();
+    }
+
+    // 初始渲染星座列表
+    renderConstellations();
+
+
+    // --- 自定义性别选择器逻辑 ---
+    const userGenderInput = document.getElementById('user-gender');
+    const genderPickerContainer = document.getElementById('gender-picker-container');
+    const genderPickerGrid = document.getElementById('gender-picker-grid');
+    const genderOptions = ["男性", "女性", "其他"];
+    let selectedGender = null;
+
+    // 渲染性别选择器
+    function renderGenderPicker() {
+        genderPickerGrid.innerHTML = ''; // 清除之前的选项
+        genderOptions.forEach(gender => {
+            const genderCell = document.createElement('div');
+            genderCell.classList.add('option-cell');
+            genderCell.innerText = gender;
+            genderCell.dataset.value = gender;
+
+            if (selectedGender === gender) {
+                genderCell.classList.add('selected');
+            }
+
+            genderCell.addEventListener('click', () => {
+                console.log('性别单元格被点击:', gender);
+                selectedGender = gender;
+                userGenderInput.value = gender;
+                genderPickerContainer.style.display = 'none';
+                renderGenderPicker(); // 重新渲染以更新选中状态
+            });
+            genderPickerGrid.appendChild(genderCell);
+        });
+    }
+
+    // 性别输入框获取焦点时显示选择器
+    userGenderInput.addEventListener('focus', () => {
+        hideAllPickersExcept(genderPickerContainer); // 隐藏其他选择器
+        genderPickerContainer.style.display = 'block';
+        // 根据当前输入值设置选中的性别
+        selectedGender = userGenderInput.value;
+        renderGenderPicker();
+        positionPicker(userGenderInput, genderPickerContainer);
+    });
+
+    // --- 自定义占卜风格选择器逻辑 ---
+    const divinationStyleInput = document.getElementById('divination-style');
+    const stylePickerContainer = document.getElementById('style-picker-container');
+    const stylePickerGrid = document.getElementById('style-picker-grid');
+    const styleOptions = ["神秘莫测", "乐观积极", "直言不讳", "充满诗意"];
+    let selectedStyle = null;
+
+    // 渲染风格选择器
+    function renderStylePicker() {
+        stylePickerGrid.innerHTML = ''; // 清除之前的选项
+        styleOptions.forEach(style => {
+            const styleCell = document.createElement('div');
+            styleCell.classList.add('option-cell');
+            styleCell.innerText = style;
+            styleCell.dataset.value = style;
+
+            if (selectedStyle === style) {
+                styleCell.classList.add('selected');
+            }
+
+            styleCell.addEventListener('click', () => {
+                console.log('风格单元格被点击:', style);
+                selectedStyle = style;
+                divinationStyleInput.value = style;
+                stylePickerContainer.style.display = 'none';
+                renderStylePicker(); // 重新渲染以更新选中状态
+            });
+            stylePickerGrid.appendChild(styleCell);
+        });
+    }
+
+    // 风格输入框获取焦点时显示选择器
+    divinationStyleInput.addEventListener('focus', () => {
+        hideAllPickersExcept(stylePickerContainer); // 隐藏其他选择器
+        stylePickerContainer.style.display = 'block';
+        // 根据当前输入值设置选中的风格
+        selectedStyle = divinationStyleInput.value;
+        renderStylePicker();
+        positionPicker(divinationStyleInput, stylePickerContainer);
+    });
+
+
+    // --- 用于定位和隐藏选择器的辅助函数 ---
+    function positionPicker(inputElement, pickerElement) {
+        const inputRect = inputElement.getBoundingClientRect();
+        const modalRect = divinationModal.getBoundingClientRect();
+
+        // 计算相对于模态框叠加层的顶部和左侧位置
+        pickerElement.style.top = (inputRect.bottom - modalRect.top + 5) + 'px'; // 5px 间距
+        pickerElement.style.left = (inputRect.left - modalRect.left) + 'px';
+
+        // 如果选择器溢出右侧，则调整位置
+        // 这假设选择器已设置最大宽度
+        const pickerRect = pickerElement.getBoundingClientRect();
+        if (pickerRect.right > modalRect.right) {
+            pickerElement.style.left = (inputRect.right - modalRect.left - pickerRect.width) + 'px';
+        }
+    }
+
+    // 隐藏所有选择器
+    function hideAllPickers() {
+        genderPickerContainer.style.display = 'none';
+        stylePickerContainer.style.display = 'none';
+    }
+
+    // 隐藏除指定选择器外的所有选择器
+    function hideAllPickersExcept(exceptionPicker) {
+        if (genderPickerContainer !== exceptionPicker) genderPickerContainer.style.display = 'none';
+        if (stylePickerContainer !== exceptionPicker) stylePickerContainer.style.display = 'none';
+    }
+
+
+    // 点击输入框或选择器外部时隐藏选择器
+    document.addEventListener('click', (event) => {
+        const target = event.target;
+        // userBirthdateInput 现在是 type="text"，所以不需要担心原生选择器
+        const isClickInsideAnyInput = userBirthdateInput.contains(target) || // 现在包含出生日期输入
+            userGenderInput.contains(target) ||
+            divinationStyleInput.contains(target);
+        const isClickInsideAnyPicker = genderPickerContainer.contains(target) ||
+            stylePickerContainer.contains(target);
+
+        if (!isClickInsideAnyInput && !isClickInsideAnyPicker) {
+            hideAllPickers();
+        }
+    });
+
+
+    // 初始渲染
+    renderGenderPicker();
+    renderStylePicker();
+
+</script>
+</body>
+</html>

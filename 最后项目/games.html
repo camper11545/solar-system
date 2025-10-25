@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>月相日历 - 星穹万象</title>
+    <style>
+        body {
+            /* 原有背景设置保留，新增以下属性 */
+            background-attachment: fixed;
+            background-repeat: no-repeat; /* 防止图片重复显示 */
+            background-size: cover; /* 确保图片覆盖整个视口 */
+            min-height: 100vh; /* 保证背景至少覆盖整个屏幕高度 */
+            position: relative; /* 为子元素定位提供参考，避免层级错乱 */
+        }
+
+        /* 新增html样式，确保根元素高度正确 */
+        html {
+            height: 100%;
+            overflow-x: hidden; /* 防止横向滚动条导致的背景偏移 */
+        }
+
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 100px; /* 留出导航栏的高度 */
+            min-height: 100vh;
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            max-width: 1280px;
+            height: 810px;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(100, 255, 218, 0.3);
+        }
+
+        iframe {
+            position: absolute;
+            top: -58px;
+            left: 0;
+            width: 100%;
+            height: calc(100% + 58px);
+            border: none;
+            pointer-events: auto;
+            scrollbar-width: none; /* Firefox */
+        }
+        iframe::-webkit-scrollbar {
+            display: none; /* Chrome */
+        }
+        :root {
+            --space-dark: #0a0e17;
+            --nebulae-purple: #1a0a2c;
+            --star-blue: #0f4c75;
+            --pulsar-white: #bbe1fa;
+            --planet-orange: #ff7b25;
+            --mars-red: #c1440e;
+            --saturn-gold: #e1ad21;
+            --galaxy-pink: #d16ba5;
+            --accent-blue: #64ffda;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-image: url('星空.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--pulsar-white);
+            font-family: 'Exo 2', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        #vanta-bg {
+            display: none;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(5, 7, 17, 0.8), transparent);
+            backdrop-filter: blur(0);
+            border-bottom: none;
+        }
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--pulsar-white), var(--accent-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(187, 225, 250, 0.4);
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-links a {
+            color: var(--pulsar-white);
+            text-decoration: none;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+        .nav-links a:hover {
+            color: var(--pulsar-white);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .games-section {
+            padding: 100px 0;
+            text-align: center;
+            background-color: transparent;
+            padding: 100px 20px;
+            border-radius: 0;
+            margin-top: 80px;
+        }
+        .games-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .game-link {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--star-blue), var(--galaxy-pink));
+            color: white;
+            padding: 16px 42px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 25px rgba(15, 76, 117, 0.4);
+            border: 2px solid rgba(187, 225, 250, 0.3);
+            margin: 20px;
+        }
+        .game-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px rgba(209, 107, 165, 0.6);
+            letter-spacing: 2px;
+        }
+        @media (max-width: 992px) {
+            .games-section h2 {
+                font-size: 2.3rem;
+            }
+        }
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 15px;
+            }
+            .logo {
+                margin-bottom: 15px;
+            }
+            .games-section h2 {
+                font-size: 2.3rem;
+            }
+        }
+        .game-link {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 2;
+        }
+        .game-link::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            transition: width 1.2s ease, height 1.2s ease, opacity 1.2s ease;
+            opacity: 0;
+        }
+        .game-link:hover::before {
+            width: 200px;
+            height: 200px;
+            opacity: 1;
+        }
+        .game-link:hover .btn-img {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        .game-link:not(:hover) .btn-img {
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 23, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(2px);
+        }
+        .ripple-container {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+        }
+        .ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(100, 255, 218, 0.3);
+            transform: translate(-50%, -50%);
+            animation: ripple 2s linear infinite;
+        }
+        @keyframes ripple {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                width: 600px;
+                height: 600px;
+                opacity: 0;
+            }
+        }
+        .modal {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            height: 70vh;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            z-index: 2001;
+        }
+        .modal.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: var(--pulsar-white);
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            z-index: 2002;
+        }
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .modal-iframe {
+            width: 100%;
+            height: 100%;
+        }
+        #spaceVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 1500;
+            display: none;
+        }
+        .fade-out {
+            opacity: 0 !important;
+            transform: translateY(20px) !important;
+            pointer-events: none;
+        }
+        .nav-links, .games-section {
+            transition: opacity 1.5s ease, transform 1.5s ease;
+        }
+
+        /* 底部触发区域 */
+        .bottom-trigger {
+            height: 100px;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="vanta-bg"></div>
+<nav>
+    <div class="nav-links">
+        <a href="index1.html">首页</a>
+        <a href="index.html">行星系统</a>
+        <a href="planets-2.html">3D模型</a>
+        <a href="http://127.0.0.1:3000/star-map.html">星穹万象</a>
+        <a href="games.html">月相日历</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+    <div class="iframe-container">
+        <iframe
+                src="https://starwalk.space/zh-Hans/moon-calendar"
+                title="月相日历"
+                id="moonFrame"
+                allowfullscreen
+        ></iframe>
+    </div>
+
+    <!-- 底部触发区域 -->
+    <div class="bottom-trigger" id="bottomTrigger"></div>
+</div>
+
+<!-- 视频元素 - 确保没有loop属性 -->
+<video id="spaceVideo" autoplay muted>
+    <source src="月亮.mp4" type="video/mp4">
+    您的浏览器不支持视频标签。
+</video>
+
+<script>
+    // 获取元素
+    const spaceVideo = document.getElementById('spaceVideo');
+    const bottomTrigger = document.getElementById('bottomTrigger');
+    const pageWrapper = document.querySelector('.page-wrapper');
+    const navLinks = document.querySelector('.nav-links');
+
+    // 添加标志位防止视频播放完成后立即再次触发
+    let isVideoPlaying = false;
+    let canTriggerVideo = true;
+
+    // 定义滚动监听函数
+    function checkScrollPosition() {
+        // 如果视频正在播放或不允许触发，则直接返回
+        if (isVideoPlaying || !canTriggerVideo) {
+            return;
+        }
+
+        // 获取触发区域的位置信息
+        const triggerRect = bottomTrigger.getBoundingClientRect();
+
+        // 检查触发区域是否进入视口
+        if (triggerRect.top <= window.innerHeight && triggerRect.bottom >= 0) {
+            // 播放视频
+            playVideo();
+        }
+    }
+
+    // 监听滚动事件
+    window.addEventListener('scroll', checkScrollPosition);
+
+    function playVideo() {
+        // 设置标志位
+        isVideoPlaying = true;
+        canTriggerVideo = false;
+
+        // 移除滚动监听事件，防止视频播放时重复触发
+        window.removeEventListener('scroll', checkScrollPosition);
+
+        // 先移除可能存在的事件监听器，防止重复绑定
+        spaceVideo.removeEventListener('ended', onVideoEnd);
+
+        // 隐藏页面内容
+        pageWrapper.classList.add('fade-out');
+        navLinks.classList.add('fade-out');
+
+        // 显示并播放视频
+        setTimeout(() => {
+            spaceVideo.style.display = 'block';
+            // 确保视频从头开始播放
+            spaceVideo.currentTime = 0;
+            spaceVideo.play();
+
+            // 使用once选项确保事件只触发一次
+            spaceVideo.addEventListener('ended', onVideoEnd, { once: true });
+        }, 1000); // 等待淡出动画完成
+    }
+
+    function onVideoEnd() {
+        // 重置标志位
+        isVideoPlaying = false;
+
+        // 隐藏视频
+        spaceVideo.style.display = 'none';
+
+        // 显示页面内容
+        pageWrapper.classList.remove('fade-out');
+        navLinks.classList.remove('fade-out');
+
+        // 滚动到页面开始位置
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+        // 延迟一段时间后重新允许触发视频
+        setTimeout(() => {
+            canTriggerVideo = true;
+            // 重新添加滚动监听事件
+            window.addEventListener('scroll', checkScrollPosition);
+        }, 1000);
+    }
+</script>
+</body>
+</html>

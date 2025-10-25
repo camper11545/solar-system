@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>太阳系探索器</title>
+    <link rel="stylesheet" href="index.css"></link>
+    <!-- 导航栏字体和图标样式 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+<nav>
+
+    <div class="nav-links">
+        <a href="index1.html" >首页</a>
+        <a href="index.html">行星系统</a>
+        <a href="planets-2.html" onclick="location.href='planets-2.html';">3D模型</a>
+
+        <a href="http://127.0.0.1:3000/star-map.html">星穹万象</a>
+        <a href="games.html">月相日历</a>
+    </div>
+</nav>
+
+<h1 class='logo'>
+    <span></span>
+</h1>
+<input class='planet9' id='pluto' name='planet' type='radio'>
+<label class='pluto menu' for='pluto'>
+    <div class='preview'></div>
+    <div class='info'>
+        <h2>
+            <div class='pip'></div>
+            冥王星
+        </h2>
+        <h3>39.5 天文单位</h3>
+    </div>
+</label>
+<input class='planet8' id='neptune' name='planet' type='radio'>
+<label class='neptune menu' for='neptune'>
+    <div class='preview'></div>
+    <div class='info'>
+        <h2>
+            <div class='pip'></div>
+            海王星
+        </h2>
+        <h3>30.06 天文单位</h3>
+    </div>
+</label>
+
+<input class='planet7' id='uranus' name='planet' type='radio'>
+<label class='uranus menu' for='uranus'>
+    <div class='preview'></div>
+    <div class='info'>
+        <h2>
+            <div class='pip'></div>
+            天王星
+        </h2>
+        <h3>19.18 天文单位</h3>
+    </div>
+</label>
+<input class='planet6' id='saturn' name='planet' type='radio'>
+<label class='saturn menu' for='saturn'>
+    <div class='preview'></div>
+    <div class='info'>
+        <h2>
+            <div class='pip'></div>
+            土星
+        </h2>
+        <h3>9.539 天文单位</h3>
+    </div>
+</label>
+<input class='planet5' id='jupiter' name='planet' type='radio'>
+<label class='jupiter menu' for='jupiter'>
+    <div class='preview'></div>
+    <div class='info'>
+        <h2>
+            <div class='pip'></div>
+            木星
+        </h2>
+        <h3>5.203 天文单位</h3>
+    </div>
+</label>
+<input checked='checked' class='planet4' id='mars' name='planet' type='radio'>
+<label class='menu mars' for='mars'>
+    <div class='preview'></div>
+    <div class='info'>
+        <h2>
+            <div class='pip'></div>
+            火星
+        </h2>
+        <h3>1.524 天文单位</h3>
+    </div>
+</label>
+<input checked='checked' class='planet3' id='earth' name='planet' type='radio'>
+<label class='menu earth' for='earth'>
+    <div class='preview'></div>
+    <div class='info'>
+        <h2>
+            <div class='pip'></div>
+            地球
+        </h2>
+        <h3>1 天文单位</h3>
+    </div>
+</label>
+<input checked='checked' class='planet2' id='venus' name='planet' type='radio'>
+<label class='menu venus' for='venus'>
+    <div class='preview'></div>
+    <div class='info'>
+        <h2>
+            <div class='pip'></div>
+            金星
+        </h2>
+        <h3>0.723 天文单位</h3>
+    </div>
+</label>
+<input checked='checked' class='planet1' id='mercury' name='planet' type='radio'>
+<label class='menu mercury' for='mercury'>
+    <div class='preview'></div>
+    <div class='info'>
+        <h2>
+            <div class='pip'></div>
+            水星
+        </h2>
+        <h3>0.39 天文单位</h3>
+    </div>
+</label>
+<div class='solar'>
+    <div class='solar_systm'>
+        <div class='planet mercury'>
+            <div class='planet_description mercury'>
+                <h2>行星</h2>
+                <h1>水星</h1>
+                <p>距离太阳最近的行星。它绕太阳运行的速度比所有其他行星都快，这就是罗马人以他们行动迅速的信使神命名它的原因。</p>
+                <label for='readMercury'>
+                    <a onclick="fetchWikiSummary('水星', 'readMercury', 'panelMercury')">
+                        阅读更
+                        <span>多</span>
+                    </a>
+                </label>
+            </div>
+            <div class='overlay'></div>
+        </div>
+    </div>
+    <div class='solar_systm'>
+        <div class='planet venus'>
+            <div class='planet_description venus'>
+                <h2>行星</h2>
+                <h1>金星</h1>
+                <p>以罗马爱与美的女神命名。在古代，金星常被认为是两颗不同的星，即昏星和晨星。</p>
+                <label for='readVenus'>
+                    <a onclick="fetchWikiSummary('金星', 'readVenus', 'panelVenus')">
+                        阅读更
+                        <span>多</span>
+                    </a>
+                </label>
+            </div>
+            <div class='overlay'></div>
+        </div>
+    </div>
+    <div class='solar_systm'>
+        <div class='planet earth'>
+            <div class='moon moon'>
+                <h3>卫星</h3>
+                <h2>月球</h2>
+
+            </div>
+            <div class='trajectory m'></div>
+            <div class='planet_description earth'>
+                <h2>行星</h2>
+                <h1>地球</h1>
+                <p>地球，我们的家园。它是已知唯一拥有含游离氧大气层、表面有液态水海洋，当然还有生命的行星。</p>
+                <label for='readEarth'>
+                    <a onclick="fetchWikiSummary('地球', 'readEarth', 'panelEarth')">
+                        阅读更
+                        <span>多</span>
+                    </a>
+                </label>
+            </div>
+            <div class='overlay'></div>
+        </div>
+    </div>
+    <div class='solar_systm'>
+        <div class='planet mars'>
+            <div class='moon deimos'>
+                <h3>卫星</h3>
+                <h2>火卫二</h2>
+            </div>
+            <div class='trajectory d'></div>
+            <div class='moon phoebos'>
+                <h3>卫星</h3>
+                <h2>火卫一</h2>
+            </div>
+            <div class='trajectory p'></div>
+            <div class='planet_description mars'>
+                <h2>行星</h2>
+                <h1>火星</h1>
+                <p>太阳系中距离太阳第四近且第二小的行星。以罗马战神命名，常被描述为“红色星球”。</p>
+                <label for='readMars'>
+                    <a onclick="fetchWikiSummary('火星', 'readMars', 'panelMars')">
+                        阅读更
+                        <span>多</span>
+                    </a>
+                </label>
+            </div>
+            <div class='overlay'></div>
+        </div>
+    </div>
+    <div class='solar_systm'>
+        <div class='planet jupiter'>
+            <div class='moon lo'>
+                <h3>卫星</h3>
+                <h2>木卫一</h2>
+            </div>
+            <div class='moon europa'>
+                <h3>卫星</h3>
+                <h2>木卫二</h2>
+            </div>
+            <div class='moon ganymede'>
+                <h3>卫星</h3>
+                <h2>木卫三</h2>
+            </div>
+            <div class='trajectory lop'></div>
+            <div class='trajectory eu'></div>
+            <div class='trajectory ga'></div>
+            <div class='planet_description jupiter'>
+                <h2>行星</h2>
+                <h1>木星</h1>
+                <p>木星是太阳系中最大的行星。因此，它以罗马神话中的众神之王命名。</p>
+                <label for='readJupiter'>
+                    <a onclick="fetchWikiSummary('木星', 'readJupiter', 'panelJupiter')">
+                        阅读更
+                        <span>多</span>
+                    </a>
+                </label>
+            </div>
+            <div class='overlay'></div>
+        </div>
+    </div>
+    <div class='solar_systm'>
+        <div class='planet saturn'>
+            <div class='moon titan'>
+                <h3>卫星</h3>
+                <h2>土卫六</h2>
+            </div>
+            <div class='moon dione'>
+                <h3>卫星</h3>
+                <h2>土卫四</h2>
+            </div>
+            <div class='moon enceladus'>
+                <h3>卫星</h3>
+                <h2>土卫二</h2>
+            </div>
+            <div class='trajectory ti'></div>
+            <div class='trajectory di'></div>
+            <div class='trajectory enc'></div>
+            <div class='planet_description saturn'>
+                <h2>行星</h2>
+                <h1>土星</h1>
+                <p>土星是太阳系中距离太阳第六远且第二大的行星。土星是罗马神话中泰坦之王克洛诺斯的名字。</p>
+                <label for='readSaturn'>
+                    <a onclick="fetchWikiSummary('土星', 'readSaturn', 'panelSaturn')">
+                        阅读更
+                        <span>多</span>
+                    </a>
+                </label>
+            </div>
+            <div class='overlay'></div>
+        </div>
+    </div>
+    <div class='solar_systm'>
+        <div class='planet uranus'>
+            <div class='moon miranda'>
+                <h3>卫星</h3>
+                <h2>天卫五</h2>
+            </div>
+            <div class='moon ariel'>
+                <h3>卫星</h3>
+                <h2>天卫一</h2>
+            </div>
+            <div class='moon umbriel'>
+                <h3>卫星</h3>
+                <h2>天卫二</h2>
+            </div>
+            <div class='trajectory mir'></div>
+            <div class='trajectory ari'></div>
+            <div class='trajectory umb'></div>
+            <div class='planet_description uranus'>
+                <h2>行星</h2>
+                <h1>天王星</h1>
+                <p>第一颗被科学家发现的行星。这颗行星因其显著的倾斜度而引人注目，其自转轴几乎直接指向太阳。</p>
+                <label for='readUranus'>
+                    <a onclick="fetchWikiSummary('天王星', 'readUranus', 'panelUranus')">
+                        阅读更
+                        <span>多</span>
+                    </a>
+                </label>
+            </div>
+            <div class='overlay'></div>
+        </div>
+    </div>
+    <div class='solar_systm'>
+        <div class='planet neptune'>
+            <div class='moon triton'>
+                <h3>卫星</h3>
+                <h2>海卫一</h2>
+            </div>
+            <div class='moon proteus'>
+                <h3>卫星</h3>
+                <h2>海卫八</h2>
+            </div>
+            <div class='moon nereid'>
+                <h3>卫星</h3>
+                <h2>海卫二</h2>
+            </div>
+            <div class='trajectory tri'></div>
+            <div class='trajectory pro'></div>
+            <div class='trajectory ner'></div>
+            <div class='planet_description neptune'>
+                <h2>行星</h2>
+                <h1>海王星</h1>
+                <p>海王星是太阳系中距离太阳第八远的行星。它是第一颗在通过望远镜实际观测到之前，就通过数学计算预测出存在的行星。</p>
+                <label for='readNeptune'>
+                    <a onclick="fetchWikiSummary('海王星', 'readNeptune', 'panelNeptune')">
+                        阅读更
+                        <span>多</span>
+                    </a>
+                </label>
+            </div>
+            <div class='overlay'></div>
+        </div>
+    </div>
+    <div class='solar_systm'>
+        <div class='planet pluto'>
+            <div class='planet_description pluto'>
+                <h2>矮行星</h2>
+                <h1>冥王星</h1>
+                <p>冥王星曾经被认为是太阳系中第九颗且最遥远的行星，现在是已知最大的矮行星。</p>
+                <label for='readPluto'>
+                    <a onclick="fetchWikiSummary('冥王星', 'readPluto', 'panelPluto')">
+                        阅读更
+                        <span>多</span>
+                    </a>
+                </label>
+            </div>
+            <div class='overlay'></div>
+        </div>
+    </div>
+</div>
+
+<input class='read' id='readMercury' name='mercuryRead' type='radio'>
+<label class='closeBig' for='closeMercury'></label>
+<input class='read' id='closeMercury' name='mercuryRead' type='radio'>
+<div class='panel' id="panelMercury">
+</div>
+
+<input class='read' id='readVenus' name='venusRead' type='radio'>
+<label class='closeBig' for='closeVenus'></label>
+<input class='read' id='closeVenus' name='venusRead' type='radio'>
+<div class='panel' id="panelVenus">
+</div>
+
+<input class='read' id='readEarth' name='earthRead' type='radio'>
+<label class='closeBig' for='closeEarth'></label>
+<input class='read' id='closeEarth' name='earthRead' type='radio'>
+<div class='panel' id="panelEarth">
+</div>
+
+<input class='read' id='readMars' name='marsRead' type='radio'>
+<label class='closeBig' for='closeMars'></label>
+<input class='read' id='closeMars' name='marsRead' type='radio'>
+<div class='panel' id="panelMars">
+</div>
+
+<input class='read' id='readJupiter' name='jupiterRead' type='radio'>
+<label class='closeBig' for='closeJupiter'></label>
+<input class='read' id='closeJupiter' name='jupiterRead' type='radio'>
+<div class='panel' id="panelJupiter">
+</div>
+
+<input class='read' id='readSaturn' name='saturnRead' type='radio'>
+<label class='closeBig' for='closeSaturn'></label>
+<input class='read' id='closeSaturn' name='saturnRead' type='radio'>
+<div class='panel' id="panelSaturn">
+</div>
+
+<input class='read' id='readUranus' name='uranusRead' type='radio'>
+<label class='closeBig' for='closeUranus'></label>
+<input class='read' id='closeUranus' name='uranusRead' type='radio'>
+<div class='panel' id="panelUranus">
+</div>
+
+<input class='read' id='readNeptune' name='neptuneRead' type='radio'>
+<label class='closeBig' for='closeNeptune'></label>
+<input class='read' id='closeNeptune' name='neptuneRead' type='radio'>
+<div class='panel' id="panelNeptune">
+</div>
+
+<input class='read' id='readPluto' name='plutoRead' type='radio'>
+<label class='closeBig' for='closePluto'></label>
+<input class='read' id='closePluto' name='plutoRead' type='radio'>
+<div class='panel' id="panelPluto">
+</div>
+
+<input class='read' id='readMoon' name='moonRead' type='radio'>
+<label class='closeBig' for='closeMoon'></label>
+<input class='read' id='closeMoon' name='moonRead' type='radio'>
+<div class='panel' id='panelMoon'></div>
+
+
+<script>
+
+    async function fetchWikiSummary(query, radioId, panelId) {
+        document.getElementById(panelId).innerHTML = `
+  <div class="gif-loader">
+    <img src="./tietu/hedong.gif" alt="加载中" />
+    <div class="loading-text">飞船正在返回数据...</div>
+  </div>
+`;
+
+
+
+
+        try {
+            if (radioId) {
+                document.getElementById(radioId).checked = true;
+            }
+
+            const response = await fetch(`http://localhost:3000/search?query=${query}`);
+            const data = await response.json();
+            const panel = document.getElementById(panelId);
+
+            if (data.error) {
+                panel.innerHTML = `<h1>${query}</h1><p>${data.error}</p>`;
+                return;
+            }
+
+            // 将摘要切割为前半段 + 后半段
+            const summary = data.summary || '';
+            const midpoint = Math.floor(summary.length / 2);
+            const part1 = summary.slice(0, midpoint);
+            const part2 = summary.slice(midpoint);
+
+            // 构建 HTML
+            let html = '';
+
+            // 主图放最上面
+            if (data.mainImage) {
+                html += `<img src="${data.mainImage}" alt="${data.title} 主图" style="max-width: 90%; margin-bottom: 20px; border-radius: 10px;" />`;
+            }
+
+            html += `<h1>${data.title}</h1>`;
+            html += `<p>${part1}</p>`;
+
+            // 中间插入附图
+            if (data.extraImage) {
+                html += `<img src="${data.extraImage}" alt="附图" style="max-width: 90%; margin: 20px 0; border-radius: 10px;" />`;
+            }
+
+
+            html += `<p>${part2}</p>`;
+            // === 为每个行星添加对应的卫星按钮 ===
+            if (query === '地球') {
+                html += `
+        <div class="moon-links">
+            <h3>卫星</h3>
+            <button onclick="showMoonInfo('月球')">月球</button>
+        </div>
+    `;
+            } else if (query === '火星') {
+                html += `
+        <div class="moon-links">
+            <h3>卫星</h3>
+            <button onclick="showMoonInfo('火卫一')">火卫一</button>
+            <button onclick="showMoonInfo('火卫二')">火卫二</button>
+        </div>
+    `;
+            } else if (query === '木星') {
+                html += `
+        <div class="moon-links">
+            <h3>卫星</h3>
+            <button onclick="showMoonInfo('木卫一')">木卫一</button>
+            <button onclick="showMoonInfo('木卫二')">木卫二</button>
+            <button onclick="showMoonInfo('木卫三')">木卫三</button>
+        </div>
+    `;
+            } else if (query === '土星') {
+                html += `
+        <div class="moon-links">
+            <h3>卫星</h3>
+            <button onclick="showMoonInfo('土卫二')">土卫二</button>
+            <button onclick="showMoonInfo('土卫四')">土卫四</button>
+            <button onclick="showMoonInfo('土卫六')">土卫六</button>
+        </div>
+    `;
+            } else if (query === '天王星') {
+                html += `
+        <div class="moon-links">
+            <h3>卫星</h3>
+            <button onclick="showMoonInfo('天卫一')">天卫一</button>
+            <button onclick="showMoonInfo('天卫二')">天卫二</button>
+            <button onclick="showMoonInfo('天卫五')">天卫五</button>
+        </div>
+    `;
+            } else if (query === '海王星') {
+                html += `
+        <div class="moon-links">
+            <h3>卫星</h3>
+            <button onclick="showMoonInfo('海卫一')">海卫一</button>
+            <button onclick="showMoonInfo('海卫二')">海卫二</button>
+            <button onclick="showMoonInfo('海卫八')">海卫八</button>
+        </div>
+    `;
+            }
+
+            panel.innerHTML = html;
+
+        } catch (error) {
+            console.error('请求出错:', error);
+            const panel = document.getElementById(panelId);
+
+            panel.innerHTML = `<h1>错误</h1><p>请求失败，请检查网络连接或重试</p>`;
+        }
+    }
+    function showMoonInfo(moonName) {
+        fetchWikiSummary(moonName, 'readMoon', 'panelMoon');
+    }
+
+</script>
+
+
+
+<script src='./lunzhuan/8246c.js'></script>
+<script src='./lunzhuan/049c4.js'></script>
+<script src='./lunzhuan/99eda.chunk.js'></script>
+<script src='./lunzhuan/41b70.chunk.js'></script>
+<script src='./lunzhuan/77325.js'></script>
+<script src='./lunzhuan/99eda.chunk.js'></script>
+<script src='./lunzhuan/0f6de.js'></script>
+<script src='./lunzhuan/filestack.min.js'></script>
+<script src='./lunzhuan/a0f31.js'></script>
+<script src='./lunzhuan/aa9d6.js'></script>
+<script src='./lunzhuan/82d11.js'></script>
+<script src='./lunzhuan/d5605.js'></script>
+
+</body>
+</html>
